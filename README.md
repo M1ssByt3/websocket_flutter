@@ -1,76 +1,129 @@
-# WebSocket Demo Flutter Application
+# Real-time Chat Application
 
-A simple Flutter application demonstrating WebSocket communication using the `web_socket_channel` package.
-
-## Overview
-
-This application allows users to send messages to a WebSocket echo server and receive the echoed responses. It demonstrates real-time bidirectional communication between a client and server using WebSockets.
+A fully functional Flutter chat application demonstrating real-time communication using WebSockets with a custom Python WebSocket server. This project showcases a complete end-to-end implementation of a chat system with modern UI and real-time capabilities.
 
 ## Features
 
-- Connect to a WebSocket server (`wss://echo.websocket.events`)
-- Send text messages to the server
-- Receive and display echoed responses from the server
-- Clean resource disposal when the app is closed
+- **Real-time Bidirectional Communication**: Instant message delivery between users
+- **Custom WebSocket Server**: Python-based WebSocket server with broadcast capabilities
+- **Message Timestamps**: All messages include precise timestamp information
+- **Reverse Chronological Order**: Latest messages appear at the top of the chat view
+- **Visual Message Distinction**: Clear visual difference between sent and received messages
+- **Connection Status Indicator**: Real-time connection status monitoring
+- **User-friendly Interface**: Intuitive chat interface with modern design elements
+- **Message History**: New connections automatically receive chat history
+- **Multiple User Testing**: Options for testing with multiple users
+
+## Project Structure
+
+### Server (Python)
+
+- `server.py`: A custom WebSocket server built with Python's `websockets` library
+
+### Flutter App
+
+- **Models**:
+  - `ChatMessage`: Represents a chat message with text, sender, and timestamp
+
+- **Services**:
+  - `ChatService`: Manages WebSocket connection and message handling
+
+- **Widgets**:
+  - `MessageBubble`: Displays individual chat messages with styling
+
+- **Screens**:
+  - `LoginScreen`: User authentication and name selection
+  - `ChatScreen`: Main chat interface
 
 ## Getting Started
 
 ### Prerequisites
 
-- Flutter SDK (latest version recommended)
-- An IDE (Visual Studio Code, Android Studio, etc.)
-- A device or emulator to run the app
+1. Flutter SDK (latest version recommended)
+2. Python 3.7+ with the `websockets` library
+3. An IDE (VS Code, Android Studio, etc.)
 
-### Installation
+### Setup and Run
 
-1. Clone this repository
-2. Install dependencies:
-   ```
-   flutter pub get
-   ```
-3. Run the application:
-   ```
-   flutter run
-   ```
+#### 1. Install Python Dependencies
 
-## How It Works
+```bash
+pip install websockets
+```
 
-The application establishes a WebSocket connection to an echo server that returns any message sent to it. When a user types a message and presses the send button, the message is sent to the server via the WebSocket connection. The server then echoes the message back, which is displayed in the UI.
+#### 2. Start the WebSocket Server
 
-## Code Structure
+```bash
+python server.py
+```
 
-- `main.dart`: Contains the complete application code
-  - `MyApp`: Root application widget
-  - `MyHomePage`: Stateful widget that manages the WebSocket connection
-  - `_MyHomePageState`: State class containing the WebSocket channel and UI components
+The server will start on `ws://127.0.0.1:8765`
+
+#### 3. Run the Flutter App
+
+```bash
+flutter run
+```
+
+## How to Test with Multiple Users
+
+There are a few ways to test the chat with multiple users:
+
+### Option 1: Quick Switch Between Users
+
+On the login screen, use the "Alice" and "Bob" buttons to quickly switch between test users.
+
+### Option 2: Multiple Browser Windows (Web)
+
+If running on the web:
+1. Run `flutter run -d chrome`
+2. Open multiple browser windows/tabs with the app
+3. Log in with different usernames
+
+### Option 3: Multiple Devices/Emulators
+
+Connect multiple physical devices or run multiple emulators, then run the app on each.
+
+## Implementation Details
+
+### WebSocket Server
+
+The Python server:
+- Maintains a list of connected clients
+- Stores chat history (up to 100 messages)
+- Broadcasts messages to all connected clients
+- Adds timestamps to messages
+- Sends chat history to newly connected clients
+
+### Flutter App
+
+- Uses the Provider pattern for state management
+- WebSocket connection is handled by the `web_socket_channel` package
+- Messages are displayed in reverse chronological order
+- Each message shows the sender, text content, and timestamp
+- Different styling for messages sent by the current user vs. others
+
+## Troubleshooting
+
+- If you cannot connect to the WebSocket server, ensure:
+  - The server is running
+  - You're connecting to the correct address (default is `ws://127.0.0.1:8765`)
+  - No firewall is blocking the connection
+  - Your device/emulator can access the hosting machine (when testing on physical devices)
+
+- If the app doesn't show messages in real-time:
+  - Check your connection status indicator in the app bar
+  - Try using the refresh button in the app bar
+  - Ensure the server is running with proper logging enabled
+  - Check for any error messages in the server console
 
 ## Future Improvements
 
-1. **Connection Status Indicator**: Add a visual indicator showing the current connection status (connecting, connected, disconnected).
-
-2. **Message History**: Implement a scrollable message history to display all sent and received messages.
-
-3. **Custom Server Configuration**: Allow users to configure and connect to different WebSocket servers.
-
-4. **Message Formatting**: Support for different message formats (text, JSON, binary) with appropriate display formatting.
-
-5. **Authentication Support**: Add capability to authenticate with WebSocket servers that require it.
-
-6. **Reconnection Logic**: Implement automatic reconnection when the connection is lost.
-
-7. **Offline Mode**: Add offline capability with message queuing for later transmission.
-
-8. **Message Typing Indicators**: Show when the other end is typing or processing a message.
-
-9. **Multi-user Support**: Extend the application to support chat rooms or multiple participants.
-
-10. **Notifications**: Add push notifications for messages received when the app is in the background.
-
-## Dependencies
-
-- [web_socket_channel](https://pub.dev/packages/web_socket_channel): For WebSocket communication.
-- Flutter SDK built-in packages (Material, etc.)
-
-## License
-
-This project is open source and available under the MIT License.
+1. **User Authentication**: Add proper user authentication
+2. **Message Persistence**: Store messages in a database
+3. **Typing Indicators**: Show when users are typing
+4. **Read Receipts**: Indicate when messages have been read
+5. **Media Sharing**: Allow sharing of images and files
+6. **Private Messaging**: Support for direct messages between users
+7. **Group Chat**: Create and manage group conversations
+8. **Push Notifications**: Notify users of new messages when the app is in the background
